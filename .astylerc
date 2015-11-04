@@ -1,0 +1,10 @@
+--style=linux 
+--indent=force-tab  
+--indent-labels  
+--break-blocks 
+--pad-header 
+--unpad-paren 
+--pad-oper 
+--indent-preprocessor 
+--suffix=none 
+--align-pointer=name

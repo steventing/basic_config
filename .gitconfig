@@ -1,0 +1,26 @@
+[user]
+	email = steventing@fiberlogic.com
+	name = steventing
+
+[color]
+	ui = true
+	log = auto
+	branch = auto
+	status = auto
+	diff = auto
+
+[alias]
+	co = checkout
+	ci = commit
+	di = diff
+	st = status
+	br = branch
+	re = remote
+	di = diff
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+
+[github-import]
+	remote = origin
+
+[merge]
+	tool = vimdiff
