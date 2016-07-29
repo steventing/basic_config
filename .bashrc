@@ -101,6 +101,7 @@ alias bs2='ssh bbsu@ssh.bs2.to'
 alias ptt='ssh bbsu@ptt.cc'
 alias tmux='tmux -2'
 alias sr='screen -rd'
+alias lock='gnome-screensaver-command -l && xset dpms force off'
 sc() { STY=$1 screen -S $1 ; }
 
 # cds
