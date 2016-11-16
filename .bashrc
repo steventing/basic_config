@@ -14,10 +14,13 @@
 
 # don't put duplicate lines in the history. See bash(1) for more options
 # ... or force ignoredups and ignorespace
-HISTCONTROL=ignoredups:ignorespace
+HISTCONTROL=ignoredups:erasedups
 
 # append to the history file, don't overwrite it
 shopt -s histappend
+
+export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
+#export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 HISTSIZE=5000
@@ -54,9 +57,9 @@ else
     complete -cf which
 fi
 
-if [ -f ~/dkgconf/local/completion/git-prompt.sh ]; then
-    source ~/dkgconf/local/completion/git-completion.bash
-    source ~/dkgconf/local/completion/git-prompt.sh
+if [ -f ~/.git-prompt.sh ]; then
+    source ~/.git-completion.bash
+    source ~/.git-prompt.sh
 else
     alias __git_ps1=':'
 fi
@@ -80,6 +83,7 @@ complete -F _service service
 # ==================== aliases ===================={{{1
 # ability
 alias grep='grep --color=always'
+alias egrep='egrep --color=always'
 alias vim='vim -p'
 alias ls='ls -GF'
 alias rsync='rsync -avP'   # --del is too dangerous  -z compress
@@ -335,5 +339,6 @@ if [ -f ~/.bashlocal ]; then
     echo 'exec .bashlocal ...'
     . ~/.bashlocal
 fi
+stty -ixon
 export PATH='/home/steven/FOSSAPC/arm-2010q1/bin':$PATH
 export PIP_RESPECT_VIRTUALENV=true

@@ -1,6 +1,6 @@
 [user]
 	email = steventing@realtek.com
-	name = steventing
+	name = Steven Ting
 
 [color]
 	ui = true
@@ -17,6 +17,7 @@
 	br = branch
 	re = remote
 	di = diff
+	cp = cherry-pick
 	lg = log  --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit -30
 
 [github-import]
@@ -24,3 +25,5 @@
 
 [merge]
 	tool = vimdiff
+[log]
+	decorate = true
