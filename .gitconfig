@@ -9,6 +9,16 @@
 	status = auto
 	diff = auto
 
+[diff]
+	tool = meld
+	guitool = meld
+
+[difftool]
+	prompt = false
+
+[difftool "meld"]
+	path = /usr/bin/meld
+
 [alias]
 	co = checkout
 	ci = commit
@@ -27,3 +37,5 @@
 	tool = vimdiff
 [log]
 	decorate = true
+[push]
+	default = simple
