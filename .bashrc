@@ -89,6 +89,7 @@ alias ls='ls -GF'
 alias rsync='rsync -avP'   # --del is too dangerous  -z compress
 alias ipcat='ypcat hosts | sort -t. -n -k1,1 -k2,2 -k3,3 -k4,4'
 alias pg='ps aux | grep'
+alias lg='lsmod | grep'
 alias wget='wget --no-check-certificate'
 
 # short cut
@@ -99,7 +100,7 @@ alias lt='ls -altr'   # sort by time
 alias py='python3'
 alias py2='python2'
 alias v='vim'
-alias m='man'
+#alias m='man'
 alias g='grep'
 alias bs2='ssh bbsu@ssh.bs2.to'
 alias ptt='ssh bbsu@ptt.cc'
@@ -107,6 +108,7 @@ alias tmux='tmux -2'
 alias sr='screen -rd'
 alias lock='gnome-screensaver-command -l && xset dpms force off'
 sc() { STY=$1 screen -S $1 ; }
+alias mk='make clean && make -j8'
 
 # cds
 alias ..='cd ..'
@@ -137,6 +139,7 @@ export LANG=en_US.UTF-8
 export CLICOLOR=1
 export CLICOLOR_FORCE=1
 export LS_COLORS="di=36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43"
+#export TERM=screen-256color-bce
 #export PYTHONSTARTUP=~/.pyrc.py
 
 
@@ -341,4 +344,6 @@ if [ -f ~/.bashlocal ]; then
 fi
 stty -ixon
 export PATH='/home/steven/FOSSAPC/arm-2010q1/bin':$PATH
+export PATH="$PATH":/var/opt/steven/depot_tools
+#export PATH="/usr/lib/ccache:$PATH"
 export PIP_RESPECT_VIRTUALENV=true

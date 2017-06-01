@@ -26,7 +26,6 @@
 	st = status
 	br = branch
 	re = remote
-	di = diff
 	cp = cherry-pick
 	lg = log  --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit -30
 
@@ -39,3 +38,7 @@
 	decorate = true
 [push]
 	default = simple
+[core]
+	pager = sed 's/\t/    /g' | less -R
+[color "diff"]
+	meta = blue black bold
