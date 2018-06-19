@@ -143,6 +143,20 @@ export LS_COLORS="di=36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30
 #export TERM=screen-256color-bce
 #export PYTHONSTARTUP=~/.pyrc.py
 
+if [ -e /usr/share/terminfo/x/xterm-256color ]; then
+export TERM='xterm-256color'
+else
+export TERM='xterm-color'
+fi
+
+if ! shopt -oq posix; then
+	if [ -f /usr/share/bash-completion/bash_completion ]; then
+		. /usr/share/bash-completion/bash_completion
+	elif [ -f /etc/bash_completion ]; then
+		. /etc/bash_completion
+	fi
+fi
+
 
 # ==================== PROMPT ===================={{{1
 
@@ -343,8 +357,12 @@ if [ -f ~/.bashlocal ]; then
     echo 'exec .bashlocal ...'
     . ~/.bashlocal
 fi
+#cursor color
+echo -ne "\e]12;red\a"
 stty -ixon
 export PATH='/home/steven/FOSSAPC/arm-2010q1/bin':$PATH
 export PATH="$PATH":/var/opt/steven/depot_tools
 #export PATH="/usr/lib/ccache:$PATH"
 export PIP_RESPECT_VIRTUALENV=true
+export C9_DIR="$HOME"/.c9
+export PATH="$C9_DIR/node/bin:$C9_DIR/node_modules/.bin:$PATH"
