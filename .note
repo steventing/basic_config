@@ -1,0 +1,444 @@
+#ANSI color table
+NONE "\033[m"
+RED "\033[0;32;31m"
+LIGHT_RED "\033[1;31m"
+GREEN "\033[0;32;32m"
+LIGHT_GREEN "\033[1;32m"
+BLUE "\033[0;32;34m"
+LIGHT_BLUE "\033[1;34m"
+DARY_GRAY "\033[1;30m"
+CYAN "\033[0;36m"
+LIGHT_CYAN "\033[1;36m"
+PURPLE "\033[0;35m"
+LIGHT_PURPLE "\033[1;35m"
+BROWN "\033[0;33m"
+YELLOW "\033[1;33m"
+LIGHT_GRAY "\033[0;37m"
+WHITE "\033[1;37m"
+#nc command
+tar -cvf - xxx | nc IP PORT
+nc -l port | tar -xvf -  # use nc -l -k to keep listening
+
+#change multi filename
+for j in `ls`; do mv -v  "$j" "$j.txt" ; done
+
+#free memory
+sync; sudo echo 3 > /proc/sys/vm/drop_caches
+#free swap
+sudo swapoff -a; sudo swapon -a
+
+#restart network (fix wifi cannot show list)
+sudo systemctl restart network-manager.service
+
+#trimming tailing space
+sed -i 's/[[:space:]]*$//' main.c
+
+#sed replace mutiple line, N means read next line
+sed -i '/^\t\+PHYDM_DBG(.*/ {N; s/PHYDM_DBG.*);$/;/g}' $FILE
+
+#vim mode:
+search \s\+$
+#vim search leading tab
+/^\t\(\t\)\{3,\}if
+---------------------------------
+
+`date +%Y%m%d`
+`date +%Y/%m/%d(%H:%M)`
+date -s '2016/02/28 13:36:55'
+
+ping 172.21.69.254 > /dev/null 2>&1 &
+ping -s 1500 -i0.2 172.21.69.254
+
+TP-LINK_9892
+TP-LINK_9891_5G
+
+wpa_supplicant -Dnl80211 -iwlan0 -c .conf -dd
+
+## find tech find .c or .h file exclude hal/btc,phydm,halmac folder
+find . -regex '.*\.\(c\|h\)' -not -path "*hal/btc*" -not -path "*hal/phydm*" -not -path "*hal/halmac*"
+
+## find tech find .c or .h file exclude win.c win.h ap.c ap.h
+find . -regex '.*\.\(c\|h\)' ! -name "*_win.[c|h]"  ! -name "*_ap.[c|h]"  ! -name "*_iot.[c|h]" -exec ls {} \;
+
+#checkpatch:
+./checkpatch.pl -no-tree -no-color -show-types -f
+find btc -exec /home/steven/RTK/tmp/driver_exercise/self/checkpatch.pl  -no-tree -no-color -show-types --terse -f {} \;
+#clang-format
+find . -regex '.*\.\(c\|h\)' -exec /home/steven/bin/clang-format -style=file -i  {} \;
+#unifdef
+
+find . -regex '.*\.\(c\|h\)' -exec unifdef -b -DDM_ODM_SUPPORT_TYPE=0x04 -DODM_AP=0x01 -DODM_CE=0x04 -DODM_WIN=0x08 -DODM_ADSL=0x10 -DDM_ODM_CE_MAC80211 -DODM_IOT=0x20 -DBEAMFORMING_SUPPORT=0 -DRTL8814A_SUPPORT=0 -DRTL8821A_SUPPORT=0 -DRTL8812A_SUPPORT=0 -DRTL8822B_SUPPORT=1 -DRTL8195A_SUPPORT=0 -DRTL8814B_SUPPORT -DRTL8188E_SUPPORT=0 -DRTL8192E_SUPPORT=0 -DRTL8723B_SUPPORT=0 -DRTL8703B_SUPPORT=0 -DRTL8723D_SUPPORT=0 -DRTL8710B_SUPPORT=0 -DRTL8188F_SUPPORT=0 -UCONFIG_PHYDM_DFS_MASTER -DRTL8703B_SUPPORT=0 -DRTL8192D_SUPPORT=0 -DRTL8812E_SUPPORT=0 -UCONFIG_WLAN_HAL_8814AE -DRA_MASK_PHYDMLIZE_CE -DPHYDM_SUPPORT_EDCA -DSUPPORTABLITY_PHYDMLIZE -UCONFIG_ANTENNA_DIVERSITY -UCONFIG_DFS_MASTER -DPHYDM_LA_MODE_SUPPORT=1 -UCONFIG_SIGNAL_SCALE_MAPPING -DPHYDM_TESTCHIP_SUPPORT=0 -UCONFIG_SIGNAL_SCALE_MAPPING -DRT_PCI_INTERFACE=1 -DRT_USB_INTERFACE=2 -DRT_SDIO_INTERFACE=3 -DDEV_BUS_TYPE=1 -DCONFIG_BB_POWER_SAVING -DCONFIG_BB_TXBF_API -DCONFIG_RA_FW_DBG_CODE=0 -DCONFIG_DYNAMIC_RX_PATH=0 -DCONFIG_PHYDM_DEBUG_FUNCTION=1 -UODM_EVM_ENHANCE_ANTDIV -UCONFIG_HL_SMART_ANTENNA_TYPE2 -UCONFIG_HL_SMART_ANTENNA_TYPE1 -UCONFIG_PHYDM_ANTENNA_DIVERSITY -DRTL8197F_SUPPORT=0 -DRTL8821C_SUPPORT=0 -DRTL8197F_SUPPORT=0 -DRTL8881A_SUPPORT=0 -UCONFIG_ANT_DETECTION -UCONFIG_PATH_DIVERSITY -UCONFIG_RA_DYNAMIC_RTY_LIMIT -DCONFIG_PSD_TOOL=1 -UCONFIG_S0S1_SW_ANTENNA_DIVERSITY -DODM_IC_PHY_STATUE_NEW_TYPE -DODM_IC_11AC_SERIES_SUPPORT -DODM_IC_11N_SERIES_SUPPORT -DODM_CONFIG_BT_COEXIST -DODM_PHY_STATUS_NEW_TYPE_SUPPORT -k -m {} \;
+
+#find . -regex '.*\.\(c\|h\)' -exec unifdef -b -DDM_ODM_SUPPORT_TYPE=0x04 -DODM_AP=0x01 -DODM_CE=0x04 -DODM_WIN=0x08 -DODM_ADSL=0x10 -DODM_IOT=0x20 -k -m {} \;
+find . -regex '.*\.\(c\|h\)' -exec unifdef -b -DDM_ODM_SUPPORT_TYPE=0x04 -DODM_AP=0x01 -DODM_CE=0x04 -DODM_WIN=0x08 -DODM_ADSL=0x10 -DODM_IOT=0x20 -DDM_ODM_CE_MAC80211 -k -m {} \;
+### -B keep line -U undefine -k if 0 -m in place
+
+# find leading tab
+\grep -rn  -P '^\t{6,}' * > /tmp/output2
+# find exclude /
+\grep -o -e '[^/]*$' objfile_listk
+
+# find use replaced string
+find . -regex '.*\.c' -exec sh -c 'ls "$1" > "$1.out"' -- {} \;
+
+# dos2unix
+find . -type f -print0 | xargs -0 dos2unix
+
+sudo date --set="$(ssh user@server date)"
+sudo dpkg-reconfigure tzdata
+
+# force remove package
+dpkg --remove --force-remove-reinstreq
+
+### tune CPU performance
+sudo cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq
+sudo chmod 777 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+sudo echo performance > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+
+** read/write register **
+echo 0x304 4 > read_reg
+cat read_reg
+echo 0x304 0x33330004 4  > write_reg
+echo 0x304 4 > read_reg
+cat read_reg
+## use 0x30300000
+#RTL_W32(0x304, 0x33330000)
+#or
+#RTL_W32(0x304, 0x33330004)
+#0x03000000, b[27:24]  b[27:24]
+8814AE 要用0x3000,0000 這組也可以. 但前提要先下:  echo 0x577 0xb 1 > /proc/net/rtl8814ae/wlan0/write_reg  才行.
+不然就麻煩你先用 0x3000,0000 試試看(和8822BE一致).  如果不好, 再把 3 往上調看看.
+
+### Readonly File system
+cp -pr /lib/firmware /storage/sd/firmware
+mount -t tmpfs none /lib/firmware/
+cp -pr /storage/sd/firmware/* /lib/firmware/
+#
+
+#BrightSign
+while [ 1==1 ]; do iwpriv wlan0 read 4,0 ; sleep 1;done
+insmod /storage/usb1/cfg80211/8812ae_debug.ko rtw_ips_mode=0 rtw_power_mgnt=0
+
+# Bash example
+cat tab_list | cut -f1 -d '.' | uniq -c | sort -k 1n
+
+#color tail
+tail -f /var/log/kern.log | awk '/rtl_pci:/ {print "\033[31m" $0 "\033[0m"}/rtl8822be:/ {print "\033[32m" $0 "\033[0m"}'
+
+
+#Bash arithmetic evaluation
+echo $[~(-7) + 10]
+
+#trace-cmd
+sudo trace-cmd record -p function_graph -l ":mod:rtlwifi" -l ":mod:rtl_pci" -l ":mod:rtl8822be" -l ":mod:mac80211" -l ":mod:cfg80211" -n rtl8822be_get_desc -n rtl8822be_set_desc -n "_*" -n rtl8822be_phy_set_bb_reg -n rtl8822be_phy_set_rf_reg -n rtl8822be_phy_query_bb_reg iperf -c 192.168.0.10 -i1 -t5 -u -b 600M
+
+#copy symbolic link content
+cp -Lr 
+
+#use vendor cmd via wpa_supplicant
+sudo wpa_cli -i wls1 vendor  0x00E04C 2002 01
+sudo wpa_cli -i wls1 vendor  0x00E04C 2002 02
+
+# rsync
+rsync . ubuntu@172.21.69.96:/home/ubuntu/RTK/SVN/rtl8822be_v5.1.0.7_r20466/
+rsync -avP --exclude '.git' steven@172.21.232.243:~/RTK/gerrit/rtlwifi .
+
+# rtwpriv
+rtwpriv wlp1s0 read 4,addr
+
+rtwpriv wlp1s0 rfr 4 addr        # via rf read register
+rtwpriv wlan0 rfr 0 0x18
+rtwpriv wlp1s0 rfw 4 addr value  # via rf write register
+
+#endian hexdump
+sudo  od -A x -t x4z   /sys/bus/pci/devices/0000\:02\:00.0/config
+
+#server:
+iperf -s -i1 -w 800k -l64k
+#client
+iperf.exe -c 192.168.11.2 -w 416k -i1 -l 64k -t60 -P4
+
+make clean; make COPTS=-g
+
+#phydm enable debug
+echo "dbg 100" > cmd
+cat cmd
+echo "dbg num 1" > cmd
+
+#enlarge max scan list
+#define	MAX_BSS_CNT 512
+
+static noinline BOOLEAN rtl8822be_InterruptRecognized(PADAPTER Adapter)
+
+
+#setpci set bit 80 to 40
+sudo setpci -s 04:00.0 80.B=40
+
+#source insight
+search initial tab: \t$
+search trailing space: \s+$
+
+#tar --exclude
+tar --exclude='./folder' --exclude='./upload/folder2' -zcvf /backup/filename.tgz .
+tar -zcvf abc.tar.gz --exclude=abc/.git abc
+
+#debug print caller
+printk("Caller is %pS\n", __builtin_return_address(0));
+
+#get IP address via sehll
+ip addr | grep wlan0 | grep inet | awk '{print $2}'| cut -f1 -d '/'
+
+#Nvidia choose
+quill-c03-t186-a02-2597-b00-devkit
+
+#person note
+NCTU web site URL: http://web.it.nctu.edu.tw/~steventing/
+NCTU web site ssh: steventing@unix.it.nctu.edu.tw
+sudo tcpdump -nevv -i wlan0 -s 1515 igmp
+
+svn log --stop-on-copy -v | less
+
+#svn update all
+svn up --set-depth infinity
+
+autossh -M 7321 -NfR 12933:localhost:22 steven@140.113.214.200
+autossh -M 2000 -fCNR 12933:localhost:22 steven@140.113.214.200
+
+# rebuild kernel module
+make -C /lib/modules/`uname -r`/build M=$PWD modules
+
+# search file in apt repo
+apt-file search /netlink/genl/genl.h
+
+find hal/phydm/halrf/ -regex '.*\.\(c\|h\)' ! -name "*_win.[c|h]" ! -name "*_ap.[c|h]" ! -name "*_iot.[c|h]" -exec /home/steven/RTK/coding_style/check_objdump_tool/do_clang_format.sh {} \;
+
+ln -s /dev/null /etc/udev/rules.d/80-net-setup-link.rules
+net.ifnames=0 biosdevname=0
+
+# vim clear register
+let @a=''
+
+# tig blame go to parent commit
+when in blame view (use tree view and select file then press b)
+use ',' to go to parent commit
+
+# git using start -----------------------------------------------------------------------------
+# git manual patch
+git add -i # to enter the interactive mode then use patch and diff to modify commit
+
+git checkout --patch -- filename
+#git set upstream
+git br --set-upstream-to=origin/sandbox/steventing/rtlwifi.kver_20161123_00_phydm
+
+#git add remote
+git remote add rtlwifi_sync https://github.com/pkshih/rtlwifi_sync.git
+
+#git diff exclude file
+git diff  pre_rev HEAD --name-only phydm | grep -v 'Makefile'| grep -v 'rtl_phydm'| grep -v 'mp_precomp.h' | xargs git diff pre_rev HEAD --
+
+#git diff certain folder and certain commit
+
+# github init repository
+echo "# python_practice" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/steventing/python_practice.git
+git push -u origin master
+
+# repo git diff
+repo forall -cp 'git diff'
+
+git remote add gerrit ssh://steventing@gerrit.realtek.com.tw:20011/driver/rtlwifi
+git add *
+git ci -a -m "8821AE initial commit"
+git br
+git di
+add remote branch
+git push <remote-name> <local-branch-name>:<remote-branch-name>
+git push origin master:sandbox/steventing/rtl8821AE
+delete remote branch
+git push <remote-name> :<remote-branch-name>
+git push origin :sandbox/steventing/rtl8821AE
+
+# git using end -----------------------------------------------------------------------------
+
+#commit dj374
+#made changes
+
+#commit y4746
+#made changes
+
+#commit k73ud
+#made changes
+
+git diff k73ud^..dj374 .      # . means current folder
+
+#git tag -> commit sha1
+git show-ref --tags
+
+#git commit reset author extracted from git config
+git commit --amend --reset-author
+
+#MP tool command
+sudo rmmod 8192ee; sudo insmod 8192ee.ko; sudo ifconfig wlan0 up
+rtwpriv wlan0 mp_start
+rtwpriv wlan0 mp_rate 108
+rtwpriv wlan0 mp_channel 1
+rtwpriv wlan0 mp_ctx background,pkt
+rtwpriv wlan0 mp_ctx pktinterval=1000
+rtwpriv wlan0 mp_query
+
+# specify mac address
+insmod $module_name.ko rtw_initmac=$mac_addr
+
+# change intf name
+1. edit /etc/default/grub GRUB_CMDLINE_LINUX="net.ifnames=0 biosdevname=0"
+2. sudo ln -sf /dev/null /etc/udev/rules.d/80-net-setup-link.rules
+
+# screen create a session and execute command
+screen -S session_name -dm  yourcommand
+screen -S session_name -dm  bash -c "ls -l; bash" <- prevent terminated
+#tmux name
+tmux new -s name
+tmux attach -d -t name
+#use :rename XXX inside tmux
+
+# python vim setting
+set ts=4 et sts=4 sw=4
+or # vim: sts=4 ts=4 sw=4 et
+
+# Linux list unused kernel
+dpkg --list 'linux-image*'|awk '{ if ($1=="ii") print $2}'|grep -v `uname -r`
+
+# Download file
+curl -k -O file.xxx
+
+# Alternatively, if you want to use timeout (here assuming GNU timeout):
+timeout --foreground 3 sh -c './slowprocess.sh;:'
+
+
+# log with timestamp
+./script.sh | while IFS= read -r line; do echo "$(date) $line"; done >>/var/log/logfile
+date +%Y%m%d%H%M%s
+
+#lftp 
+lftp xxx -uUserNmae set ssl:verify-certificate no
+
+#Parse renewal time
+sed -n 's/.*renewal\ in\ \(.* \).*/\1/p'
+
+#cutomer build Android
+ifeq ($(CONFIG_PLATFORM_ARM_RK3188), y)
+EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN -DCONFIG_PLATFORM_ANDROID -DCONFIG_PLATFORM_ROCKCHIPS
+default setting for Android 4.1, 4.2, 4.3, 4.4
+EXTRA_CFLAGS += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
+EXTRA_CFLAGS += -DCONFIG_CONCURRENT_MODE
+# default setting for Power control
+EXTRA_CFLAGS += -DRTW_ENABLE_WIFI_CONTROL_FUNC
+#EXTRA_CFLAGS += -DRTW_SUPPORT_PLATFORM_SHUTDOWN
+# default setting for Special function
+ARCH := arm64
+#CROSS_COMPILE := /home/android_sdk/Rockchip/Rk3188/prebuilts/gcc/linux-x86/arm/arm-eabi-4.6/bin/arm-eabi-
+CROSS_COMPILE := ~/rk3399_nougat_release/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/bin/aarch64-linux-android-
+#KSRC := /home/android_sdk/Rockchip/Rk3188/kernel
+KSRC := ~/rk3399_nougat_release/kernel/drivers/net/wireless/rockchip_wlan/rtl8822be
+MODULE_NAME := 8822be
+endif
+
+
+
+# check call trace
+1. add EXTRA_FLAGS += -g & make again
+2. gdb xxx.o
+3. copy RIP part e.g. RIP: my_oops_init+0x10
+4. paste on gdb: l *my_oops_init+0x10  => it shows the code location
+# or use kernel/script/decodecode => it decode Code: xx:xx:xx in oops
+
+# build supplicant alone
+edit Makefile
+CFLAGS += -I$(abspath /home/steven/RTK/8188ftv_mesh/rts390x_sdk_v3.0/out/rts3903n_evb/host/mipsel-buildroot-linux-uclibc/sysroot/usr/include/)
+LDFLAGS += -L$(abspath /home/steven/RTK/8188ftv_mesh/rts390x_sdk_v3.0/out/rts3903n_evb/host/mipsel-buildroot-linux-uclibc/sysroot/lib/)
+then
+CC=~/RTK/8188ftv_mesh/rts390x_sdk_v3.0/toolchain/rsdk-6.4.1-5281-EL-4.9-u1.0-m32fut-180611/bin/mips-linux-gcc make -j8
+
+# Android build ko file
+KSRC=/home/realtek/Android_x86_N/android-N/out/target/product/x86/obj/kernel/ ARCH=x86 CROSS_COMPILE=/home/realtek/Android_x86_N/android-N/prebuilts/gcc/linux-x86/x86/x86_64-linux-android-4.9/bin/x86_64-linux-androidkernel-  make -C ../../../out/target/product/x86/obj/kernel/  M=$PWD modules -j8
+
+# PCI aspm
+setpci -s 00:1c.2 50.b=43
+
+
+# re-mount file system
+mount -o remount,rw /
+
+https://www.ibm.com/developerworks/cn/linux/l-rcu/index.html
+
+
+# adb use
+adb shell input keyevent 4
+
+# disable lps
+rtwpriv wlan0 pm_set lps=0
+
+# prevent IPReachability
+echo 10 > /proc/sys/net/ipv4/neigh/wlan0/mcast_solicit
+echo 10 > /proc/sys/net/ipv4/neigh/wlan0/ucast_solicit
+
+# show a program depends which library
+ldd xxxxx
+
+# identify PCI PID/VID
+cat /sys/bus/pci/devices/0000\:02\:00.0/vendor
+cat /sys/bus/pci/devices/0000\:02\:00.0/device
+
+# Enable/Disable kernel module locking
+echo 0 > /proc/sys/kernel/modules_disabled # unlock
+echo 1 > /proc/sys/kernel/modules_disabled # lock
+
+# rtl_bt
+Bluetooth: hci0: RTL: rom_version status=0 version=3
+Bluetooth: hci0: RTL: rtl: loading rtl_bt/rtl8822cu_fw.bin
+Bluetooth: hci0: RTL: rtl: loading rtl_bt/rtl8822cu_config.bin
+Bluetooth: hci0: RTL: cfg_sz 14, total sz 16718
+
+# disable printk
+echo 0 > /proc/sys/kernel/printk
+
+# manual specify route
+sudo ip route add 172.21.0.0/16 via 172.21.69.254 dev eth0
+
+# clear iptables
+iptables -P INPUT ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -P OUTPUT ACCEPT
+iptables -t nat -F
+iptables -t mangle -F
+iptables -F
+iptables -X
+
+
+# Google Partner account
+steventing@realtek.corp-partner.google.com
+https://partnerissuetracker.corp.google.com/u/1/issues/124400293
+
+# Gtags in Kernel
+gtags -i -f
+
+# repair hard disk
+e2fsck -fccy /dev/sdaX
+
+# ping a range nmap
+nmap -sP 192.168.1.0/24
+
+# scan port who use 22
+nmap -p 22 -v --open 192.168.1.0/24
+
+# screen 256 color
+in bashrc add: export TERM=xterm-256color
+
+# add python3 source list on ubuntu
+https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa
+
+# determining my public IP
+curl https://ipinfo.io/ip
