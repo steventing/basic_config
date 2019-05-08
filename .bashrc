@@ -360,9 +360,10 @@ fi
 #cursor color
 echo -ne "\e]12;red\a"
 stty -ixon
-export PATH='/home/steven/FOSSAPC/arm-2010q1/bin':$PATH
-export PATH="$PATH":/var/opt/steven/depot_tools
+#export PATH='/home/steven/FOSSAPC/arm-2010q1/bin':$PATH
+#export PATH="$PATH":/var/opt/steven/depot_tools
 #export PATH="/usr/lib/ccache:$PATH"
+#export C9_DIR="$HOME"/.c9
+#export PATH="$C9_DIR/node/bin:$C9_DIR/node_modules/.bin:$PATH"
 export PIP_RESPECT_VIRTUALENV=true
-export C9_DIR="$HOME"/.c9
-export PATH="$C9_DIR/node/bin:$C9_DIR/node_modules/.bin:$PATH"
+export TERM=xterm-256color

@@ -4,7 +4,14 @@ startup_message off
 defutf8 on
 allpartial off
 defc1 off
-defencoding big5
+#defencoding big5
+defencoding utf8
+encoding utf8 utf8
+attrcolor b ".I"
+defbce "on"
+defscrollback 30000
+
+shelltitle ""
 
 caption always "%{=u .G} %-w%<%{=ub .C}%n %t%{=u .G}%+w "
 hardstatus alwaysignore
@@ -18,3 +25,4 @@ bindkey "^[[1;5C" next
 bindkey "^[[5D" prev
 bindkey "^[[5C" next
 #termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E38;5;%dm'
