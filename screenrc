@@ -10,6 +10,7 @@ encoding utf8 utf8
 attrcolor b ".I"
 defbce "on"
 defscrollback 30000
+altscreen on
 
 shelltitle ""
 
