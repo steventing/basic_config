@@ -49,6 +49,9 @@ date -s '2016/02/28 13:36:55'
 ping 172.21.69.254 > /dev/null 2>&1 &
 ping -s 1500 -i0.2 172.21.69.254
 
+# ping add timestamp
+ping 10.0.0.1 | while read line; do echo `date` - $line; done
+
 TP-LINK_9892
 TP-LINK_9891_5G
 
@@ -203,6 +206,7 @@ svn up --set-depth infinity
 
 autossh -M 7321 -NfR 12933:localhost:22 steven@140.113.214.200
 autossh -M 2000 -fCNR 12933:localhost:22 steven@140.113.214.200
+autossh -M 7321 -NfR 12933:localhost:22 yyting@alumni.cs.nctu.edu.tw
 
 # rebuild kernel module
 make -C /lib/modules/`uname -r`/build M=$PWD modules
@@ -246,6 +250,24 @@ git commit -m "first commit"
 git remote add origin https://github.com/steventing/python_practice.git
 git push -u origin master
 
+# github sync a fork
+git remote -v
+(before)
+origin https://github.com/user/repo.git (fetch)
+origin https://github.com/user/repo.git (push)
+
+git remote add upstream https://github.com/otheruser/repo.git
+
+git remote -v
+(after)
+origin https://github.com/user/repo.git (fetch)
+origin https://github.com/user/repo.git (push)
+upstream https://github.com/otheruser/repo.git (fetch)
+upstream https://github.com/otheruser/repo.git (push)
+
+git pull --rebase upstream master
+git push origin master
+
 # repo git diff
 repo forall -cp 'git diff'
 
@@ -254,12 +276,20 @@ git add *
 git ci -a -m "8821AE initial commit"
 git br
 git di
-add remote branch
+
+#add remote branch
 git push <remote-name> <local-branch-name>:<remote-branch-name>
 git push origin master:sandbox/steventing/rtl8821AE
-delete remote branch
+
+#delete remote branch
 git push <remote-name> :<remote-branch-name>
 git push origin :sandbox/steventing/rtl8821AE
+
+# push to review server
+git push origin HEAD:refs/for/releases/google_demo_20190605
+
+#push to sandbox
+git push origin HEAD:sandbox/steventing/Debug_VerifyRouter
 
 # git using end -----------------------------------------------------------------------------
 
@@ -299,6 +329,9 @@ insmod $module_name.ko rtw_initmac=$mac_addr
 # screen create a session and execute command
 screen -S session_name -dm  yourcommand
 screen -S session_name -dm  bash -c "ls -l; bash" <- prevent terminated
+
+# rename screen session name
+screen -S [sessionid] -X sessionname [name]
 #tmux name
 tmux new -s name
 tmux attach -d -t name
@@ -311,8 +344,9 @@ or # vim: sts=4 ts=4 sw=4 et
 # Linux list unused kernel
 dpkg --list 'linux-image*'|awk '{ if ($1=="ii") print $2}'|grep -v `uname -r`
 
-# Download file
+# Download file via curl
 curl -k -O file.xxx
+curl -L --referer ";auto" -o test.pdf URL-for-direct-download
 
 # Alternatively, if you want to use timeout (here assuming GNU timeout):
 timeout --foreground 3 sh -c './slowprocess.sh;:'
@@ -354,6 +388,15 @@ endif
 3. copy RIP part e.g. RIP: my_oops_init+0x10
 4. paste on gdb: l *my_oops_init+0x10  => it shows the code location
 # or use kernel/script/decodecode => it decode Code: xx:xx:xx in oops
+
+# gdb tutorial
+1. b xxxfunc => set break point
+   bt
+2. vector<int> A, check exist 0 value element
+   p A or p *l1
+3. if thread: gdb> thread apply all bt
+4. use gdbtui -> in gdb ctrl_x + a
+
 
 # build supplicant alone
 edit Makefile
@@ -442,3 +485,151 @@ https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa
 
 # determining my public IP
 curl https://ipinfo.io/ip
+
+
+git stash
+git rebase -i 84c11cdd762fad3ca950f4926a7dec9856bbe98e
+git reset --soft HEAD^
+git status
+git reset HEAD .
+git status
+git checkout -- .
+git diff
+tig origin/pending
+git cherry-pick 949fa42fdee7961941cc6f09c4bad91134976c53
+git status
+rm coex.*
+git cherry-pick 949fa42fdee7961941cc6f09c4bad91134976c53
+tig
+git rebase --continue
+
+
+# Mulit-AP run
+sudo LD_LIBRARY_PATH="/home/steven/RTK/git/EasyMesh_release_v1.3_patch_Turnkey_sourcr_code/new/users/multi-ap/multi-ap-core/output"  ./map_agent  -vvvv
+
+# check program was compiled with debug mode
+objdump --syms
+file # "stripped" or "not stripped"
+
+#minicom with color support
+'minicom -c on' = command line
+
+
+# Ubuntu Install Adobe PDF reader
+add-apt-repository "deb http://archive.canonical.com/ precise partner"
+apt-get update
+apt-get install adobereader-enu
+apt-get install msttcorefonts
+
+# Read markdown file in terminal
+sudo apt install pandoc lynx
+pandoc example.md | lynx -stdin
+
+# prplmesh execute command
+sudo ./prplmesh_rtw -m 00:e0:4c:aa:aa:02 -i eth1:simulated:if.eth.pc2.sim,wlan0:rtw:rtl_hostapd_2G.conf -v
+
+# Chromium OS reduce verification time
+"flashrom -p host --wp-disable"
+"/usr/share/vboot/bin/set_gbb_flags.sh 0x00000001"
+
+
+#sed
+
+{START-TA                      {START-TAG
+foo bar                        foo bar 2
+ID: 111                        ID: 111
+foo bar                        foo bar 3
+END-TAG}                       END-TAG}
+
+{START-TAG
+foo bar           to           {START-TAG
+ID: 222                        foo bar 2
+foo bar                        ID: 333
+END-TAG}                       foo bar 3
+                               END-TAG}
+{START-TAG
+foo bar
+ID: 333
+foo bar
+END-TAG}
+
+sed '/{START-TAG/{:a;N;/END-TAG}/!ba};/ID: 222/d' data.txt
+#breakdown
+/{START-TAG/ { # Match '{START-TAG'
+:a             # Create label a
+N              # Read next line into pattern space
+/END-TAG}/!    # If not matching 'END-TAG}'...
+           ba  # Then goto a
+}              # End /{START-TAG/ block
+/ID: 222/d     # If pattern space matched 'ID: 222' then delete it. 
+
+#---------------------------------------------------------------------
+BEGIN="Solution:"
+ENDSTR="#----------------------------------------#"
+
+sed -i -n "
+s/$BEGIN//
+t continue
+b end
+
+:continue
+n
+s/\($ENDSTR\)/\1/
+t end
+b continue
+
+:end
+p
+
+" $1
+#---------------------------------------------------------------------
+# Chomebook disalbe verification
+/usr/share/vboot/bin/make_dev_ssd.sh --remove_rootfs_verification --force
+
+# Test CA is OK in Realtek doamin
+sudo wget https://gerrit.googlesource.com/git-repo/clone.bundle
+
+# tftp
+tftp 192.168.1.100 -m binary -c put u-boot.bin
+
+# PCI related command
+PCIe
+
+認卡
+
+cat /sys/bus/pci/devices/XXXXX/vendor
+cat /sys/bus/pci/devices/XXXXX/device
+reset的方式
+
+disable
+
+echo 0 > /sys/bus/pci/slots/$N/power
+
+enable
+
+echo 1 > /sys/bus/pci/slots/$N/power
+
+reset
+
+echo “1” > /sys/bus/pci/devices/$NUMBER/reset.
+
+remove & scan
+
+echo “1” > /sys/bus/pci/devices/DDDD:BB:DD.F//remove
+
+sleep 1
+
+echo “1” > /sys/bus/pci/rescan
+
+proc 看pcie 硬體設定
+
+cat /proc/bus/pci/01/00.0 > /tmp/1.bin
+看000110這欄 : 查到 c110 代表PCIe 品質差
+lspci
+
+lspci -s 01:00.0 -xxxx 看80 offset 40代表關aspm
+vim 16進位編輯
+
+vim 1.bin (%!xxd) (離開 %!xxd -r)
+PCIe 參數調整
+
