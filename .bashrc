@@ -45,18 +45,18 @@ bind '"\e[B":history-search-forward'
 bind 'C-x:insert-comment'
 
 # completion
-if [ -f /usr/local/share/bash-completion/bash_completion.sh ]; then
-    source /usr/local/share/bash-completion/bash_completion.sh
+#if [ -f /usr/local/share/bash-completion/bash_completion.sh ]; then
+    #source /usr/local/share/bash-completion/bash_completion.sh
 
-    # do not compelet rsync. rsync is a little bit weird 0.o
-    complete -o default rsync
+    ## do not compelet rsync. rsync is a little bit weird 0.o
+    #complete -o default rsync
 
-else
-    # simple completion
-    complete -cf sudo
-    complete -cf man
-    complete -cf which
-fi
+#else
+    ## simple completion
+    #complete -cf sudo
+    #complete -cf man
+    #complete -cf which
+#fi
 
 if [ -f ~/.git-prompt.sh ]; then
     source ~/.git-completion.bash
