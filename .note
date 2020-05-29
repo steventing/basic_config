@@ -226,6 +226,10 @@ let @a=''
 when in blame view (use tree view and select file then press b)
 use ',' to go to parent commit
 
+# specify interface name in udev
+# include a file in /etc/udev/rules.d/ called 10-network-device.rules:
+# SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="22:bb:cc:33:44:dd", NAME="wifi1"
+
 # git using start -----------------------------------------------------------------------------
 # git manual patch
 git add -i # to enter the interactive mode then use patch and diff to modify commit
@@ -287,9 +291,13 @@ git push origin :sandbox/steventing/rtl8821AE
 
 # push to review server
 git push origin HEAD:refs/for/releases/google_demo_20190605
+git push origin HEAD:refs/for/master
 
 #push to sandbox
 git push origin HEAD:sandbox/steventing/Debug_VerifyRouter
+
+#clear Untracked files
+git clean -fd
 
 # git using end -----------------------------------------------------------------------------
 
@@ -308,7 +316,14 @@ git diff k73ud^..dj374 .      # . means current folder
 git show-ref --tags
 
 #git commit reset author extracted from git config
+git commit -s --author="StevenTing <mrting0228@gmail.com>"
 git commit --amend --reset-author
+
+#git get config file path
+git config --list --show-origin
+
+#git show remote tags
+git ls-remote --tags
 
 #MP tool command
 sudo rmmod 8192ee; sudo insmod 8192ee.ko; sudo ifconfig wlan0 up
@@ -389,6 +404,10 @@ endif
 4. paste on gdb: l *my_oops_init+0x10  => it shows the code location
 # or use kernel/script/decodecode => it decode Code: xx:xx:xx in oops
 
+# addr2line
+addr2line -e prplmesh_rtw 0000fe21
+addr2line -Cif -e test_backtrace_addr2line.elf 0xHHHHHHHH
+
 # gdb tutorial
 1. b xxxfunc => set break point
    bt
@@ -397,6 +416,56 @@ endif
 3. if thread: gdb> thread apply all bt
 4. use gdbtui -> in gdb ctrl_x + a
 
+# gdb remote
+gdbserver :9999 --attach
+
+gdb
+(gdb) target remote <IP>:<port>
+
+# gdb useful command
+看某個位址的值是否被改變
+ex: int test = 0;  // global變數, 假設位址是0x66333
+disp *(uint64 *)0x66333   // 程式每執行一行就會印出結果
+watch *(uint64 *)0x66333  // 變數改變時會印出來
+segmentation fault debug
+先設定core file size成unlimited: ulimit -c unlimited
+./application  //發生segmentation fault時會產生core file
+gdb ./application core.xxx
+可能會用到的指令: down, p *this, list
+r arg1 arg2 arg3 ( = ./a.out arg1 arg2 arg3)
+where
+l
+p /x [parameter] 印出該參數的memory address
+x/x [memory address]
+x/100x [memory address] 印出target memory address之後100bye的memory address
+gdb ras   (parent process)
+gdb ras processID (attach child process)
+b breakpoint
+b [functionName]
+b [lineNumber] (lineNumber is the line of fork)
+b [fileName]:[line]
+    ex:  b test.cc:5
+n next (it will skip funciton)
+s stepinto (it will go into function)
+c contiinue
+w where (print the current stack)
+p print
+list [filename] (list the content of the file)
+list [lineNumber]
+list  (list current file content)
+help [command] (ex. help list)
+p [parameter] (print parameter)
+watch [parameter] (when the parameter changed, it will show)
+detach
+attach
+r run
+backtrace
+bt: 列出每個frame的function name
+frame [number]: 回到該frame的function
+
+# fakeroot build kernel
+make-kpkg clean
+fakeroot make-kpkg --initrd --append-to-version=-custom kernel_image kernel_headers
 
 # build supplicant alone
 edit Makefile
@@ -451,6 +520,9 @@ echo 0 > /proc/sys/kernel/printk
 # manual specify route
 sudo ip route add 172.21.0.0/16 via 172.21.69.254 dev eth0
 
+# manual change metric of route rule
+sudo route add/del default gw 172.21.69.254 [metric 1]
+
 # clear iptables
 iptables -P INPUT ACCEPT
 iptables -P FORWARD ACCEPT
@@ -482,6 +554,7 @@ in bashrc add: export TERM=xterm-256color
 
 # add python3 source list on ubuntu
 https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa
+sudo add-apt-repository ppa:deadsnakes/ppa
 
 # determining my public IP
 curl https://ipinfo.io/ip
@@ -506,6 +579,8 @@ git rebase --continue
 
 # Mulit-AP run
 sudo LD_LIBRARY_PATH="/home/steven/RTK/git/EasyMesh_release_v1.3_patch_Turnkey_sourcr_code/new/users/multi-ap/multi-ap-core/output"  ./map_agent  -vvvv
+# insmod
+insmod 8812bu.ko rtw_wireless_mode=0x54 rtw_vht_enable=2
 
 # check program was compiled with debug mode
 objdump --syms
@@ -633,3 +708,131 @@ vim 16進位編輯
 vim 1.bin (%!xxd) (離開 %!xxd -r)
 PCIe 參數調整
 
+# Create host keys (only needs to be done once).
+$ mkdir -p /mnt/stateful_partition/etc/ssh
+$ ssh-keygen -f /mnt/stateful_partition/etc/ssh/ssh_host_rsa_key -N '' -t rsa
+$ ssh-keygen -f /mnt/stateful_partition/etc/ssh/ssh_host_ed25519_key -N '' -t ed25519
+# Open firewall and start sshd (must be done on every boot).
+$ iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+$ /usr/sbin/sshd -oAuthorizedKeysFile=/usr/share/chromeos-ssh-config/keys/authorized_keys
+
+# C skills
+# See caller
+void a()
+{
+    /* Your code */
+}
+
+void a_special(char const *caller_name)
+{
+    printf( "a was called from %s", caller_name);
+    a();
+}
+#define a() a_special(__func__)
+void b()
+{
+    a();
+}
+
+# ebtables
+1. List Filter, NAT, broute table.
+ebtables -L
+ebtables -t nat -L
+ebtables -t broute -L
+
+2. Create new chains:
+ebtables -t filter -N QOS
+ebtables -t nat -N MACFilter
+ebtables -t broute -N IGMP
+
+3. Add new rules:
+ebtables -t filter -A FORWARD -j QOS
+ebtables -t nat -A PREROUTING -i eth0 -j MACFilter
+
+flash default cs
+flash default-sw
+
+rtw_wireless_mode=0x54
+
+
+# nodejs
+# // 列出目前版本與可使用的指令
+# $ nvm -v
+#
+# // 使用 nvm 安裝 node
+# $ nvm install <version>
+#
+# // 檢視目前安裝的 node 版本
+# $ nvm ls
+#
+# // 切換 node 版本
+# $ nvm use <version>
+#
+# // 檢視 node 版本
+# $ node -v
+#----Realtek NAS----
+可以用webUI IP登錄
+帳號：admin
+密碼：aaaaaa
+
+
+C++
+Q:
+Myobject * obj = new Myobject();
+somefunc(obj);  //-> Does not work?? Illegal cast??
+somefunc(Myobject& b)
+{
+ // Do something
+}
+A:
+somefun(*obj);
+
+
+# dynamic library
+specify the dynamic library search path:
+gcc -o main main.c -lfoo -L. -Wl,-rpath,`pwd`
+gcc -fPIC -g -shared -o libfoo.so foo.c
+
+# run time change rpath tool
+chrpath
+
+# docker usage
+## build image from DockerFile
+docker build -t build-c build-compiler-image
+
+# mount `pwd`/project/ to =/project= in the container
+docker run -it -v $(pwd)/project:/project build-c gcc -o /project/bin/main /project/src/main.c
+docker run -it -v $(pwd)/project:/project build-c /project/bin/main
+
+# bash make
+sudo docker run -it --rm -v $(pwd)/output:/output build-autotools bash -c "cd /output/ffmpeg && ./configure --enable-gpl --disable-ffserver && make"
+
+# remove all stop docker container
+sudo docker rm/stop  $(sudo docker ps -a -q)
+
+# docker show system info
+docker system 
+
+# singularity usage
+# build image
+sudo singularity build lolcow.sif recipe_file
+# with sandbox
+sudo singularity build --sandbox lolcow/ recipe_file
+# convert sandbox to image
+sudo singularity build production.sif lolcow
+
+# shell writable to change content
+sudo singularity shell --writable lolcow/
+
+# execute command
+singularity exec lolcow_latest.sif uname -a
+
+# mount file
+$ echo "Drink milk (and never eat hamburgers)." > /data/cow_advice.txt
+$ singularity exec --bind /data:/mnt lolcow_latest.sif cat /mnt/cow_advice.txt
+Drink milk (and never eat hamburgers).
+
+# clang
+make CC=clang
+singularity exec --bind /lib/modules:/lib/modules,/usr/src/:/usr/src /home/steven/steven/singularity/clang.simg make -j8 CC=clang
+singularity exec  /home/steven/steven/singularity/sb/ make -j8 CC=clang-10 KSRC=/lib/modules/4.15.0-99-generic/build
