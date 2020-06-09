@@ -299,6 +299,9 @@ git push origin HEAD:sandbox/steventing/Debug_VerifyRouter
 #clear Untracked files
 git clean -fd
 
+#clone with submodules
+git clone --recurse-submodules
+
 # git using end -----------------------------------------------------------------------------
 
 #commit dj374
@@ -754,6 +757,8 @@ flash default-sw
 
 rtw_wireless_mode=0x54
 
+# amd64 run 32bit app
+apt install libc6-i386
 
 # nodejs
 # // 列出目前版本與可使用的指令

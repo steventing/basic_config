@@ -367,3 +367,4 @@ stty -ixon
 #export PATH="$C9_DIR/node/bin:$C9_DIR/node_modules/.bin:$PATH"
 export PIP_RESPECT_VIRTUALENV=true
 export TERM=xterm-256color
+export GTAGSCONF=/usr/local/share/gtags/gtags.conf
