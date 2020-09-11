@@ -296,11 +296,21 @@ git push origin HEAD:refs/for/master
 #push to sandbox
 git push origin HEAD:sandbox/steventing/Debug_VerifyRouter
 
+#push to branch
+git push origin HEAD:<branch_name>
+
 #clear Untracked files
 git clean -fd
 
 #clone with submodules
 git clone --recurse-submodules
+
+git submodule sync --recursive
+git submodule update --force --init --recursive
+
+# VSCode
+# disable git diff with file property
+git config core.filemode false
 
 # git using end -----------------------------------------------------------------------------
 
@@ -579,6 +589,11 @@ git cherry-pick 949fa42fdee7961941cc6f09c4bad91134976c53
 tig
 git rebase --continue
 
+# check pid use port
+sudo fuser 22/tcp
+
+# pid to process name
+ps -p 19532 -o comm=
 
 # Mulit-AP run
 sudo LD_LIBRARY_PATH="/home/steven/RTK/git/EasyMesh_release_v1.3_patch_Turnkey_sourcr_code/new/users/multi-ap/multi-ap-core/output"  ./map_agent  -vvvv
@@ -602,6 +617,9 @@ apt-get install msttcorefonts
 # Read markdown file in terminal
 sudo apt install pandoc lynx
 pandoc example.md | lynx -stdin
+
+# Read markdown in web page
+grip . 0.0.0.0:8888 # open web service
 
 # prplmesh execute command
 sudo ./prplmesh_rtw -m 00:e0:4c:aa:aa:02 -i eth1:simulated:if.eth.pc2.sim,wlan0:rtw:rtl_hostapd_2G.conf -v
@@ -785,12 +803,13 @@ C++
 Q:
 Myobject * obj = new Myobject();
 somefunc(obj);  //-> Does not work?? Illegal cast??
+
 somefunc(Myobject& b)
 {
  // Do something
 }
 A:
-somefun(*obj);
+somefunc(*obj);
 
 
 # dynamic library
@@ -841,3 +860,19 @@ Drink milk (and never eat hamburgers).
 make CC=clang
 singularity exec --bind /lib/modules:/lib/modules,/usr/src/:/usr/src /home/steven/steven/singularity/clang.simg make -j8 CC=clang
 singularity exec  /home/steven/steven/singularity/sb/ make -j8 CC=clang-10 KSRC=/lib/modules/4.15.0-99-generic/build
+
+
+https://172.21.2.99:9443/tvud/rd2
+
+# AES via openssl encrypt/decrypt
+# encrypt
+openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter 100000 -salt -in qq.enc -out qq.img
+# decrypt
+openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter 100000 -salt -d -in qq.enc -out qq.img
+
+# Android logcat filter log
+logcat *:S prplmesh:V wpa_supplicant:I hostapd:I
+
+# valgrind
+valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --verbose
+

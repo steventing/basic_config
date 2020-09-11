@@ -43,7 +43,7 @@
 [color "diff"]
 	meta = blue black bold
 [url "https://github.com/"]
-	        insteadOf = git@github.com:
+        insteadOf = git@github.com:
 
 [url "https://github.com/"]
-	        insteadOf = ssh://git@github.com/
+        insteadOf = ssh://git@github.com/
