@@ -10,14 +10,11 @@
 	diff = auto
 
 [diff]
-	tool = meld
+	tool = vimdiff
 	guitool = meld
 
 [difftool]
 	prompt = false
-
-[difftool "meld"]
-	path = /usr/bin/meld
 
 [alias]
 	co = checkout
@@ -28,6 +25,8 @@
 	re = remote
 	cp = cherry-pick
 	lg = log  --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit -30
+	d = difftool
+	s = "!f() { rev=${1-HEAD}; git difftool $rev^ $rev; }; f"
 
 [github-import]
 	remote = origin

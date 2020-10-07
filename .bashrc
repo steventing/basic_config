@@ -110,6 +110,7 @@ alias sr='screen -rd'
 alias lock='gnome-screensaver-command -l && xset dpms force off'
 sc() { STY=$1 screen -S $1 ; }
 alias mk='make clean && make -j8'
+alias ma='make -j8'
 
 # cds
 alias ..='cd ..'
