@@ -26,7 +26,8 @@
 	cp = cherry-pick
 	lg = log  --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit -30
 	d = difftool
-	s = "!f() { rev=${1-HEAD}; git difftool $rev^ $rev; }; f"
+	;s = "!f() { rev=${1-HEAD}; git difftool $rev^ $rev; }; f"
+	s = "!f() { rev=${1-HEAD} file=${2}; git difftool $rev^ $rev -- $file; }; f"
 
 [github-import]
 	remote = origin
