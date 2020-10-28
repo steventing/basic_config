@@ -688,6 +688,14 @@ sudo wget https://gerrit.googlesource.com/git-repo/clone.bundle
 # tftp
 tftp 192.168.1.100 -m binary -c put u-boot.bin
 
+# tftp server
+tftpd-hpa
+edit /etc/default/tftpd-hpa
+systemctl enable tftpd-hpa
+systemctl disable tftpd-hpa
+systemctl start tftpd-hpa
+systemctl stop  tftpd-hpa
+
 # PCI related command
 PCIe
 
@@ -828,14 +836,40 @@ docker build -t build-c build-compiler-image
 docker run -it -v $(pwd)/project:/project build-c gcc -o /project/bin/main /project/src/main.c
 docker run -it -v $(pwd)/project:/project build-c /project/bin/main
 
+# start/stop container
+docker start container_id
+docker exec -it container_id /bin/bash
+
+
 # bash make
 sudo docker run -it --rm -v $(pwd)/output:/output build-autotools bash -c "cd /output/ffmpeg && ./configure --enable-gpl --disable-ffserver && make"
 
-# remove all stop docker container
+# image
+## list all image
+sudo docker image (-aq)
+## remove dangling images
+sudo docker image prune (-a)
+sudo docker rmi $(docker images -q)
+
+# container
+## list all container
+sudo docker ps -a -q
+sudo docker container ls -a
+## remove all stop docker container
 sudo docker rm/stop  $(sudo docker ps -a -q)
+sudo docker container prune
+sudo docker container rm $(docker container ls -aq)
+
+# volume
+## list volume
+sudo docker volume ls
+## remove volume
+sudo volume prune -a
 
 # docker show system info
-docker system 
+sudo docker system
+# delete system
+sudo docker system prune (-volumes)
 
 # singularity usage
 # build image
@@ -875,4 +909,35 @@ logcat *:S prplmesh:V wpa_supplicant:I hostapd:I
 
 # valgrind
 valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --verbose
+
+# tshark
+sudo tshark -i mon0 -w capture/assoc_req.pcap -f "ether host 00:e0:4c:0b:10:eb"
+
+# monitor mode
+iw dev  # get phyX
+sudo iw phy phyX interface add mon0 type monitor
+sudo iw dev wlan0 del # necessary
+sudo ifconfig mon0 up
+sudo iw dev mon0 set freq 2437
+
+# increase swap size to 8G
+#Turn off all swap processes
+sudo swapoff -a
+#Resize the swap
+sudo dd if=/dev/zero of=/swapfile bs=1G count=8
+#if = input file
+#of = output file
+#bs = block size
+#count = multiplier of blocks
+
+#Change permission
+sudo chmod 600 /swapfile
+#Make the file usable as swap
+sudo mkswap /swapfile
+#Activate the swap file
+sudo swapon /swapfile
+#Edit /etc/fstab and add the new swapfile if it isn’t already there
+/swapfile none swap sw 0 0
+#Check the amount of swap available
+grep SwapTotal /proc/meminfo
 
