@@ -208,6 +208,8 @@ autossh -M 7321 -NfR 12933:localhost:22 steven@140.113.214.200
 autossh -M 2000 -fCNR 12933:localhost:22 steven@140.113.214.200
 autossh -M 7321 -NfR 12933:localhost:22 yyting@alumni.cs.nctu.edu.tw
 
+autossh -M 7321 -fCNR 12933:localhost:22 steven@g3nas.synology.me
+
 # rebuild kernel module
 make -C /lib/modules/`uname -r`/build M=$PWD modules
 
@@ -337,6 +339,9 @@ git config --list --show-origin
 
 #git show remote tags
 git ls-remote --tags
+
+#git log query message
+git log -i --grep='multi_ap'
 
 #MP tool command
 sudo rmmod 8192ee; sudo insmod 8192ee.ko; sudo ifconfig wlan0 up
@@ -895,8 +900,55 @@ make CC=clang
 singularity exec --bind /lib/modules:/lib/modules,/usr/src/:/usr/src /home/steven/steven/singularity/clang.simg make -j8 CC=clang
 singularity exec  /home/steven/steven/singularity/sb/ make -j8 CC=clang-10 KSRC=/lib/modules/4.15.0-99-generic/build
 
+#---------------- RAX40 flash procedure Start
+Prerequisites
+Netgear RAX40
+Serial-to-USB cable
+TFTP server
+Minicom (serial parameters 115200/8/N/1, Hardware Flow Control OFF)
+an OpenWrt/prplWrt image for Netgear RAX40
 
-https://172.21.2.99:9443/tvud/rd2
+Setup
+Open the router's casing
+Connect the serial cable (see pinout below)
+Connect your laptop via ethernet cable to port 1 on the router (the one furthest away from the yellow port)
+Flow
+Set your computer ip to static 192.168.1.2 / 255.255.255.0 no gw
+Start TFTP server
+Drop the generated full image file from your build into the TFTP server's folder.
+If required, change the file mode bits of the file so the TFTP server can read an serve it
+(example: sudo chmod 777 /tftpboot/NETGEAR_RAX40-squashfs-fullimage.img)
+minicom -s
+
+rm -rf /overlay/upper/usr /overlay/upper/opt
+
+On the target, stop it in u-boot (press enter 5-10 sec after power on when it tells you)
+On the target execute: setenv fullimage NETGEAR_RAX40-squashfs-fullimage.img
+On the target execute: saveenv
+On the target execute: run update_fullimage
+On the target execute: reset
+
+Pinout
+Note: pins used in the serial connector shown are: black = GND, green = TX, white = RX rax40_console_pinout
+
+Troubleshooting
+Image too big
+If the image is too big, the "update_fullimage" will fail to create "rootfsA" UBI volume (the device then just fails to mount rootfs when booting). One possible solution is to clean up "kernelB" and "rootfsB" then to make a flashing command "update_owrt" that creates and updates only boot bank A:
+
+run ubi_init
+ubi remove rootfsB
+ubi remove kernelB
+setenv update_owrt 'run ubi_init;tftpboot $(loadaddr) $(tftppath)$(fullimage);run switchbankA;set update_chk 0;upgrade $(loadaddr) $(filesize)'
+save
+Then use run update_owrt instead of run update_fullimage when updating from uboot.
+#---------------- RAX40 flash procedure End
+#
+
+# expand macro
+gcc -E xxx.c
+
+# Run command
+sudo LD_LIBRARY_PATH="/home/steven/RTK/multi-ap/intel_lib/intel_lib_1804_20201012/lib:." ./rtw_multiap -c ../../config_file/  -v
 
 # AES via openssl encrypt/decrypt
 # encrypt
@@ -941,3 +993,24 @@ sudo swapon /swapfile
 #Check the amount of swap available
 grep SwapTotal /proc/meminfo
 
+#VS code
+
+#go to latest edit
+    ctrl k + ctrl q
+#wrap bracket
+    ctrl + shift + \
+#format code
+    ctrl k + ctrl f
+
+#remote agent config
+Host server1
+HostName xxx
+User qoo
+
+Host server2
+Hostname qoo
+ProxyJump server1
+User qoo
+Port aaa
+
+# connect to server2 allows first connect server1 and then to server2

@@ -369,3 +369,4 @@ stty -ixon
 export PIP_RESPECT_VIRTUALENV=true
 export TERM=xterm-256color
 export GTAGSCONF=/usr/local/share/gtags/gtags.conf
+export PATH+=':/home/steven/.local/bin'
