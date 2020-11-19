@@ -1010,6 +1010,7 @@ User qoo
 Host server2
 Hostname qoo
 ProxyJump server1
+#ProxyCommand ssh -W %h:%p server1  ##alternative
 User qoo
 Port aaa
 
