@@ -27,3 +27,4 @@ bindkey "^[[5D" prev
 bindkey "^[[5C" next
 #termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
 termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E38;5;%dm'
+bind / eval "scrollback 0" "scrollback 15000"
