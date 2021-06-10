@@ -370,3 +370,5 @@ export PIP_RESPECT_VIRTUALENV=true
 export TERM=xterm-256color
 export GTAGSCONF=/usr/local/share/gtags/gtags.conf
 export PATH+=':/home/steven/.local/bin'
+export PATH=$PATH:/home/steven/local_build/depot_tools
+export PATH+=':/usr/share/bcc/tools'

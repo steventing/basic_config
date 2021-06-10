@@ -550,6 +550,13 @@ iptables -t mangle -F
 iptables -F
 iptables -X
 
+#list iptables
+iptables -t filter   -L
+iptables -t nat      -L
+iptables -t mangle   -L
+iptables -t raw      -L
+iptables -t security -L
+
 
 # Google Partner account
 steventing@realtek.corp-partner.google.com
@@ -1014,4 +1021,110 @@ ProxyJump server1
 User qoo
 Port aaa
 
+# vscode vim keybind
+gd gq gb af gh ae,ie
+gd : 跳到定義
+gq : 合併多行註釋
+gb : 移動到下一個單詞, 跟當前游標所在的單詞一樣
+af : visual mode 下不斷選中更大的文字塊
+gh : 將滑鼠懸停在貫標所在位置
+ae, ie : 選中buffer所有文字
+vim-indent-object
+cib/ci{/ci[/cit
+
+vim-surround
+"test" with cursor inside quotes type cs"' to end up with 'test'
+"test" with cursor inside quotes type ds" to end up with test
+"test" with cursor inside quotes type cs"t and enter 123> to end up with <123>test</123>
+S <desired char> : Surround when in visual modes (surrounds full selection)
+
+註釋
+gcc : 註釋當前行 gc2j : 往下注釋兩行 gci) : 註釋括號之間的內容
+
+easymotion
+key	Description
+gs	Search by one character
+gsj	Start of line forwards
+gsk	Start of line backwards
+gsw	Start of word forwards
+gsb	Start of word backwards
+
 # connect to server2 allows first connect server1 and then to server2
+
+
+#Kernel debug netconsole
+#
+#target
+netconsole=[+][src-port]@[src-ip]/[<dev>],[tgt-port]@<tgt-ip>/[tgt-macaddr]
+sudo modprobe netconsole netconsole="@/eth0,5566@172.21.69.174/"
+sudo dmesg -n 8
+#remote
+nc -u -l -p 5566
+
+#testing on target
+echo c | sudo tee /proc/sysrq-trigger
+
+#dnsmasq DHCP server
+#config file
+ port=0
+ interface=br-lan
+ bind-interfaces
+ dhcp-range=172.16.1.100,172.16.1.200,12h
+#usage
+ sudo dnsmasq -kd --conf-file=dhcp.conf
+
+
+#qemu
+#create image
+sudo apt install debootstrap
+IMG=qemu-image.img
+DIR=mount-point.dir
+qemu-img create $IMG 1g
+mkfs.ext2 $IMG
+mkdir $DIR
+
+sudo mount -o loop $IMG $DIR
+sudo debootstrap --no-check-gpg  --arch amd64 jessie $DIR
+sudo umount $DIR
+rmdir $DIR
+
+cd mount-point.dir/
+use chroot on $DIR and change password
+
+#run 
+$qemu-system-x86_64 -kernel bzImage
+                     -append "root=/dev/sda console=ttyS0 single"
+                     -drive file=toto.img,index=0,media=disk,format=raw
+                     --enable-kvm --nographic
+                     -net nic -net user,hostfwd=tcp::5555-:22
+
+
+$qemu-system-x86_64 -kernel bzImage
+                     -append "root=/dev/sda console=ttyS0"
+                     -hda qemu-image.img
+                     --enable-kvm
+                     --nographic
+
+#gdb:
+qemu-system-x86_64 -kernel /boot/vmlinuz-4.15.0-132-generic -append "root=/dev/sda console=ttyS0" -hda qemu-image.img --enable-kvm --nographic -s -S
+
+gdb
+(gdb) file ./kernel.sym
+(gdb) target remote :1234
+(gdb) hbreak start_kernel
+(gdb) c
+
+#build kernel
+make ARCH=x86_64 x86_64_defconfig 
+make ARCH=x86_64 menuconfig
+
+OBJCOPY arch/x86/boot/setup.bin
+  BUILD   arch/x86/boot/bzImage
+Setup is 16124 bytes (padded to 16384 bytes).
+System is 8673 kB
+CRC f5ca994b
+Kernel: arch/x86/boot/bzImage is ready  (#5)
+
+
+#find folder greater than x M
+du -sm * | awk '$1 > x'
