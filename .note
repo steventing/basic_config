@@ -377,6 +377,21 @@ or # vim: sts=4 ts=4 sw=4 et
 # Linux list unused kernel
 dpkg --list 'linux-image*'|awk '{ if ($1=="ii") print $2}'|grep -v `uname -r`
 
+# build kernel
+
+apt-get source linux-image-$(uname -r)
+
+cp /boot/config-$(uname -r) .config
+make menuconfig
+
+sudo make -j $(getconf _NPROCESSORS_ONLN) clean
+sudo make -j $(getconf _NPROCESSORS_ONLN)
+sudo make modules -j $(getconf _NPROCESSORS_ONLN)
+sudo make modules_install
+sudo make install
+
+strip -g -S -d *.ko
+
 # Download file via curl
 curl -k -O file.xxx
 curl -L --referer ";auto" -o test.pdf URL-for-direct-download
@@ -615,6 +630,9 @@ insmod 8812bu.ko rtw_wireless_mode=0x54 rtw_vht_enable=2
 # check program was compiled with debug mode
 objdump --syms
 file # "stripped" or "not stripped"
+
+# objdump show source and line
+objdump -S -l xxx.obj
 
 #minicom with color support
 'minicom -c on' = command line
