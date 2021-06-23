@@ -390,7 +390,16 @@ sudo make modules -j $(getconf _NPROCESSORS_ONLN)
 sudo make modules_install
 sudo make install
 
+# initrd too big
+# go to /lib/module/$(uname -r) strip the ko files
 strip -g -S -d *.ko
+
+# ramoops
+# need enable kernel config CONFIG_PSTORE_CONSOLE=y
+1. crashkernel=128M in command line (/boot/grub)
+2. modprobe ramoops mem_size=0x200000 ecc=1 mem_address=0x20200000 console_size=0x10000 record_size=0x10000 pmsg_size=0x1000
+   the mem_address should be a persistent address, we use step.1 to get reserve it
+
 
 # Download file via curl
 curl -k -O file.xxx
@@ -1143,6 +1152,8 @@ System is 8673 kB
 CRC f5ca994b
 Kernel: arch/x86/boot/bzImage is ready  (#5)
 
+#dump log
+cat /dev/kmsg
 
 #find folder greater than x M
 du -sm * | awk '$1 > x'

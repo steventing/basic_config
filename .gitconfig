@@ -42,8 +42,8 @@
 	pager = sed 's/\t/    /g' | less -R
 [color "diff"]
 	meta = blue black bold
-[url "https://github.com/"]
-        insteadOf = git@github.com:
+;[url "https://github.com/"]
+        ;insteadOf = git@github.com:
 
-[url "https://github.com/"]
-        insteadOf = ssh://git@github.com/
+;[url "https://github.com/"]
+        ;insteadOf = ssh://git@github.com/
