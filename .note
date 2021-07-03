@@ -1157,3 +1157,34 @@ cat /dev/kmsg
 
 #find folder greater than x M
 du -sm * | awk '$1 > x'
+
+#gerrit debug
+sh -p 29418 -i id_rsa_jenkins_cn3sd4 jenkins_cn3sd4@cn3wd4.sdlc.rd.realtek.com gerrit version
+
+GIT_SSH_COMMAND="ssh -v"  git clone ssh://cn3wd4.sdlc.rd.realtek.com:29418/btcoex_ax
+
+cat id_rsa_jenkins_cn3sd4.pub | ssh -p 29418 cn3wd4.sdlc.rd.realtek.com gerrit create-account --group "'Non-Interactive Users'" --full-name "Jenkins_CN3SD4" --email "no-reply@realtek.com" --ssh-key - jenkins_cn3sd4
+
+# gerrit move project
+Migrate codebase to sd network
+http://cn3sd7.sdlc.rd.realtek.com/gerrit/
+假設需要移至 SD Network 的 git repository 為 ax/windows/rtwlan
+Create a mirror repo in Gerrit, protected/ax/windows/rtwlan, inheriting from ax/windows/rtwlan  
+Repository names starting with 'protected' 是受保護的程式碼並且只有限定的 IP 位置可以讀取或改寫 
+新增 refs/heads/* 權限：(轉移完關掉)
+開 Forge Author Identity / Forge Committer / Forge Survery，否則會出現 invalid author
+開 Create Reference 權限，否則會出現 create reference
+開 Push (force 打勾) 權限，否則會出現 not fast-forward
+Generate a copy of ax/windows/rtwlan by command in SD network (VDP or VDI)  ==> 也可以使用 TortoiseGit 完成，GOTO : (補充)
+git clone --mirror ssh://cn3sd7.sdlc.rd.realtek.com:29418/ax/windows/rtwlan
+cd rtwlan.git/ 
+Change the URL of the copy generated in step 2 by command
+git remote set-url --push origin ssh://cn3sd7.sdlc.rd.realtek.com:29418/protected/protected/ax/windows/rtwlan
+git fetch -p origin
+Push to new protected repository by command
+可用指令1 : git push --mirror =>  整份 repo. 包含設定都一起 push 
+可用指令2 :  git push <remote> refs/heads/:refs/heads/ => 指定 branch name
+
+
+# obtain the commit lines form specified author 
+git log --author="steventing" --pretty=tformat: --numstat | awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s removed lines: %s total lines: %s\n", add, subs, loc }' -
