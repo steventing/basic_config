@@ -136,7 +136,7 @@ echo $[~(-7) + 10]
 sudo trace-cmd record -p function_graph -l ":mod:rtlwifi" -l ":mod:rtl_pci" -l ":mod:rtl8822be" -l ":mod:mac80211" -l ":mod:cfg80211" -n rtl8822be_get_desc -n rtl8822be_set_desc -n "_*" -n rtl8822be_phy_set_bb_reg -n rtl8822be_phy_set_rf_reg -n rtl8822be_phy_query_bb_reg iperf -c 192.168.0.10 -i1 -t5 -u -b 600M
 
 #copy symbolic link content
-cp -Lr 
+cp -Lr
 
 #use vendor cmd via wpa_supplicant
 sudo wpa_cli -i wls1 vendor  0x00E04C 2002 01
@@ -413,7 +413,7 @@ timeout --foreground 3 sh -c './slowprocess.sh;:'
 ./script.sh | while IFS= read -r line; do echo "$(date) $line"; done >>/var/log/logfile
 date +%Y%m%d%H%M%s
 
-#lftp 
+#lftp
 lftp xxx -uUserNmae set ssl:verify-certificate no
 
 #Parse renewal time
@@ -696,7 +696,7 @@ N              # Read next line into pattern space
 /END-TAG}/!    # If not matching 'END-TAG}'...
            ba  # Then goto a
 }              # End /{START-TAG/ block
-/ID: 222/d     # If pattern space matched 'ID: 222' then delete it. 
+/ID: 222/d     # If pattern space matched 'ID: 222' then delete it.
 
 #---------------------------------------------------------------------
 BEGIN="Solution:"
@@ -1006,6 +1006,73 @@ sudo iw dev wlan0 del # necessary
 sudo ifconfig mon0 up
 sudo iw dev mon0 set freq 2437
 
+iw dev <devname> set monitor <flag>*
+    Set monitor flags. Valid flags are:
+    none:     no special flags
+    fcsfail:  show frames with FCS errors
+    control:  show control frames
+    otherbss: show frames from other BSSes
+    cook:     use cooked mode
+    active:   use active mode (ACK incoming unicast packets)
+    mumimo-groupid <GROUP_ID>: use MUMIMO according to a group id
+    mumimo-follow-mac <MAC_ADDRESS>: use MUMIMO according to a MAC address
+** Currently, only support flag as none.
+
+
+$ cat /proc/net/rtl8814bu/wlan0/monitor
+Monitor mode : Disable
+
+
+$ sudo iw wlan0 set type monitor
+$ cat /proc/net/rtl8814bu/wlan0/monitor
+Monitor mode : Enable
+Device type  : 803
+ch=1, ch_offset=0, bw=0
+
+
+iw dev <devname> set channel <channel> [NOHT|HT20|HT40+|HT40-|5MHz|10MHz|80MHz]
+   phy <phyname> set channel <channel> [NOHT|HT20|HT40+|HT40-|5MHz|10MHz|80MHz]
+   dev <devname> set freq <freq> [NOHT|HT20|HT40+|HT40-|5MHz|10MHz|80MHz]
+   dev <devname> set freq <control freq> [5|10|20|40|80|80+80|160] [<center1_freq> [<center2_freq>]]
+   phy <phyname> set freq <freq> [NOHT|HT20|HT40+|HT40-|5MHz|10MHz|80MHz]
+   phy <phyname> set freq <control freq> [5|10|20|40|80|80+80|160] [<center1_freq> [<center2_freq>]]
+       Set frequency/channel the hardware is using, including HT
+       configuration.
+
+Example:
+$ iw wlan0 set channel 1 HT40+
+$ iw wlan0 set freq 2412 HT40+
+$ iw wlan0 set freq 2412 40 2422
+$ iw wlan0 info
+Interface wlan0
+        ifindex 124
+        wdev 0x4900000001
+        addr 00:e0:4c:d7:23:0b
+        type monitor
+        wiphy 73
+        channel 1 (2412 MHz), width: 40 MHz, center1: 2422 MHz
+        txpower 12.00 dBm
+
+$ sudo iw wlan0 set channel 149 80MHz
+$ sudo iw wlan0 set freq 5745 80MHz
+$ sudo iw wlan0 set freq 5745 80 5775
+$ sudo iw wlan0 info
+Interface wlan0
+        ifindex 125
+        wdev 0x4a00000001
+        addr 00:e0:4c:0a:50:04
+        type monitor
+        wiphy 74
+        channel 149 (5745 MHz), width: 80 MHz, center1: 5775 MHz
+        txpower 12.00 dBm
+
+
+$ tcpdump -i <interface> -s 0 -w <out-file>
+
+
+$ tshark -i <interface> -w <out-file>
+maprocks2:Multi-AP-5LG-2
+
 # increase swap size to 8G
 #Turn off all swap processes
 sudo swapoff -a
@@ -1118,7 +1185,7 @@ rmdir $DIR
 cd mount-point.dir/
 use chroot on $DIR and change password
 
-#run 
+#run
 $qemu-system-x86_64 -kernel bzImage
                      -append "root=/dev/sda console=ttyS0 single"
                      -drive file=toto.img,index=0,media=disk,format=raw
@@ -1142,7 +1209,7 @@ gdb
 (gdb) c
 
 #build kernel
-make ARCH=x86_64 x86_64_defconfig 
+make ARCH=x86_64 x86_64_defconfig
 make ARCH=x86_64 menuconfig
 
 OBJCOPY arch/x86/boot/setup.bin
@@ -1169,22 +1236,22 @@ cat id_rsa_jenkins_cn3sd4.pub | ssh -p 29418 cn3wd4.sdlc.rd.realtek.com gerrit c
 Migrate codebase to sd network
 http://cn3sd7.sdlc.rd.realtek.com/gerrit/
 假設需要移至 SD Network 的 git repository 為 ax/windows/rtwlan
-Create a mirror repo in Gerrit, protected/ax/windows/rtwlan, inheriting from ax/windows/rtwlan  
-Repository names starting with 'protected' 是受保護的程式碼並且只有限定的 IP 位置可以讀取或改寫 
+Create a mirror repo in Gerrit, protected/ax/windows/rtwlan, inheriting from ax/windows/rtwlan
+Repository names starting with 'protected' 是受保護的程式碼並且只有限定的 IP 位置可以讀取或改寫
 新增 refs/heads/* 權限：(轉移完關掉)
 開 Forge Author Identity / Forge Committer / Forge Survery，否則會出現 invalid author
 開 Create Reference 權限，否則會出現 create reference
 開 Push (force 打勾) 權限，否則會出現 not fast-forward
 Generate a copy of ax/windows/rtwlan by command in SD network (VDP or VDI)  ==> 也可以使用 TortoiseGit 完成，GOTO : (補充)
 git clone --mirror ssh://cn3sd7.sdlc.rd.realtek.com:29418/ax/windows/rtwlan
-cd rtwlan.git/ 
+cd rtwlan.git/
 Change the URL of the copy generated in step 2 by command
 git remote set-url --push origin ssh://cn3sd7.sdlc.rd.realtek.com:29418/protected/protected/ax/windows/rtwlan
 git fetch -p origin
 Push to new protected repository by command
-可用指令1 : git push --mirror =>  整份 repo. 包含設定都一起 push 
+可用指令1 : git push --mirror =>  整份 repo. 包含設定都一起 push
 可用指令2 :  git push <remote> refs/heads/:refs/heads/ => 指定 branch name
 
 
-# obtain the commit lines form specified author 
+# obtain the commit lines form specified author
 git log --author="steventing" --pretty=tformat: --numstat | awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s removed lines: %s total lines: %s\n", add, subs, loc }' -
